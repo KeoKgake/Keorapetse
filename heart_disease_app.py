@@ -1,10 +1,11 @@
 # Create Streamlit App
 import streamlit as st
-import joblib
-import numpy as np
+import pickle
+import pandas as pd
 
 # Load the saved model
-model = joblib.load('best_model.pkl')
+pickle_in = open('best_model.sav', 'rb')
+model =pickle.load(pickle_in)
 
 # Title
 st.title('Heart Disease Prediction')
@@ -22,7 +23,7 @@ exang = st.selectbox('Exercise Induced Angina', ['No', 'Yes'])
 oldpeak = st.number_input('ST Depression Induced by Exercise')
 slope = st.selectbox('Slope of the Peak Exercise ST Segment', ['Upsloping', 'Flat', 'Downsloping'])
 ca = st.selectbox('Number of Major Vessels Colored by Fluoroscopy', ['0', '1', '2', '3'])
-#thal = st.selectbox('Thalassemia', ['Normal', 'Fixed Defect', 'Reversible Defect'])
+thal = st.selectbox('Thalassemia', ['Normal', 'Fixed Defect', 'Reversible Defect'])
 
 # Predict
 if st.button('Predict'):
@@ -33,9 +34,9 @@ if st.button('Predict'):
     restecg = ['Normal', 'ST-T wave abnormality', 'Left ventricular hypertrophy'].index(restecg)
     exang = 1 if exang == 'Yes' else 0
     slope = ['Upsloping', 'Flat', 'Downsloping'].index(slope)
-    #thal = ['Normal', 'Fixed Defect', 'Reversible Defect'].index(thal)
+    thal = ['Normal', 'Fixed Defect', 'Reversible Defect'].index(thal)
     
-    features = np.array([[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, #thal]])
+    features = pd.array([[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]])
     prediction = model.predict(features)
     
     if prediction[0] == 1:
